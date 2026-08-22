@@ -1,0 +1,24 @@
+{
+  "name": "devops-release-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mini DevOps Release Dashboard with Express + Playwright/TypeScript test suite",
+  "scripts": {
+    "start": "node server.js",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report",
+    "send-results": "tsx send-results.ts",
+    "test:notify": "playwright test; npm run send-results"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.0",
+    "@types/node": "^20.14.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4"
+  }
+}

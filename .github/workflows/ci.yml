@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright test suite
+        id: run-tests
+        run: npx playwright test
+        continue-on-error: true
+
+      - name: Send results to n8n
+        if: always()
+        run: npm run send-results
+        env:
+          N8N_FAILURE_WEBHOOK_URL: ${{ secrets.N8N_FAILURE_WEBHOOK_URL }}
+          N8N_FLAKY_WEBHOOK_URL: ${{ secrets.N8N_FLAKY_WEBHOOK_URL }}
+
+      - name: Fail workflow if tests failed
+        if: steps.run-tests.outcome == 'failure'
+        run: exit 1
