@@ -76,7 +76,13 @@ interface ExtractedTest {
 }
 
 function stripAnsi(input: string): string {
-  return input.replace(/\[[0-9;]*m/g, '');
+  return input.replace(/\x1b\[[0-9;]*m/g, '');
+}
+
+// testName is a full breadcrumb like "devops.spec.ts > DevOps Release Dashboard > Test B - ...".
+// n8n only needs the leaf test title, so keep everything after the last '>'.
+function lastTitleSegment(rawTitle: string): string {
+  return rawTitle.includes('>') ? rawTitle.split('>').pop()!.trim() : rawTitle;
 }
 
 function collectTests(suite: PwSuite, titlePrefix = ''): ExtractedTest[] {
@@ -156,7 +162,7 @@ async function main(): Promise<void> {
         'https://YOUR-N8N-INSTANCE.example.com/webhook/test-failures',
         {
           event: 'test_failed',
-          testName: test.testName,
+          testName: lastTitleSegment(test.testName),
           file: test.file,
           line: test.line,
           project: test.project,
@@ -179,7 +185,7 @@ async function main(): Promise<void> {
         'https://YOUR-N8N-INSTANCE.example.com/webhook/flaky-tracker',
         {
           event: 'test_flaky',
-          testName: test.testName,
+          testName: lastTitleSegment(test.testName),
           file: test.file,
           line: test.line,
           project: test.project,
