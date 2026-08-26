@@ -25,6 +25,9 @@ const N8N_FLAKY_WEBHOOK_URL =
 
 const REPORT_PATH = path.resolve(process.cwd(), 'test-results/results.json');
 
+// GITHUB_REF looks like "refs/heads/main" in Actions; strip the prefix for readability.
+const BRANCH = (process.env.GITHUB_REF ?? 'local').replace(/^refs\/heads\//, '');
+
 // ---- Types matching Playwright's JSON reporter schema ---------------------
 
 interface PwResult {
@@ -161,6 +164,7 @@ async function main(): Promise<void> {
           attempts: test.attempts,
           durationMs: test.durationMs,
           errorMessage: test.errorMessage,
+          branch: BRANCH,
           timestamp: new Date().toISOString(),
         },
         'failure',
@@ -183,6 +187,7 @@ async function main(): Promise<void> {
           attempts: test.attempts,
           durationMs: test.durationMs,
           lastErrorMessage: test.errorMessage,
+          branch: BRANCH,
           timestamp: new Date().toISOString(),
         },
         'flaky',
