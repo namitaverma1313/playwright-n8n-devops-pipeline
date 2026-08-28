@@ -18,10 +18,16 @@ import path from 'node:path';
 // ============================================================================
 // Paste your trial n8n webhook URLs here.
 // ============================================================================
-const N8N_FAILURE_WEBHOOK_URL =
-  process.env.N8N_FAILURE_WEBHOOK_URL ?? 'https://YOUR-N8N-INSTANCE.example.com/webhook/test-failures';
-const N8N_FLAKY_WEBHOOK_URL =
-  process.env.N8N_FLAKY_WEBHOOK_URL ?? 'https://YOUR-N8N-INSTANCE.example.com/webhook/flaky-tracker';
+const USE_LOCAL_N8N = process.env.N8N_ENV === 'local';
+
+const N8N_FAILURE_WEBHOOK_URL = USE_LOCAL_N8N
+  ? process.env.N8N_LOCAL_FAILURE_WEBHOOK_URL
+  : process.env.N8N_FAILURE_WEBHOOK_URL;
+
+const N8N_FLAKY_WEBHOOK_URL = USE_LOCAL_N8N
+  ? process.env.N8N_LOCAL_FLAKY_WEBHOOK_URL
+  : process.env.N8N_FLAKY_WEBHOOK_URL;
+
 
 const REPORT_PATH = path.resolve(process.cwd(), 'test-results/results.json');
 

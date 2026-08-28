@@ -35,6 +35,8 @@ jobs:
         env:
           N8N_FAILURE_WEBHOOK_URL: ${{ secrets.N8N_FAILURE_WEBHOOK_URL }}
           N8N_FLAKY_WEBHOOK_URL: ${{ secrets.N8N_FLAKY_WEBHOOK_URL }}
+          N8N_LOCAL_FAILURE_WEBHOOK_URL: ${{ secrets.N8N_LOCAL_FAILURE_WEBHOOK_URL }}
+          N8N_LOCAL_FLAKY_WEBHOOK_URL: ${{ secrets.N8N_LOCAL_FLAKY_WEBHOOK_URL }}
 
       - name: Fail workflow if tests failed
         if: steps.run-tests.outcome == 'failure'
