@@ -31,8 +31,11 @@ jobs:
 
       - name: Send results to n8n
         if: always()
-        run: npm run send-results
+        run: |
+          echo "N8N_ENV=$N8N_ENV"
+          npm run send-results
         env:
+          N8N_ENV: ${{vars.N8N_ENV}}
           N8N_FAILURE_WEBHOOK_URL: ${{ secrets.N8N_FAILURE_WEBHOOK_URL }}
           N8N_FLAKY_WEBHOOK_URL: ${{ secrets.N8N_FLAKY_WEBHOOK_URL }}
           N8N_LOCAL_FAILURE_WEBHOOK_URL: ${{ secrets.N8N_LOCAL_FAILURE_WEBHOOK_URL }}
